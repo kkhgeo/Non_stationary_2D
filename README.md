@@ -46,7 +46,9 @@ params = {
     "ratio_range": (1.5, 3.0)
 }
 ```
-![Generated Non-stationary Anisotropic Field](Non_stationary_example.png)
+<p align="center">
+  <img src="Non_stationary_example.png" alt="Generated Non-stationary Anisotropic Field" width="70%">
+</p>
 
 This produces a texture where the **scale**, **smoothness**, and **orientation** of spatial variation evolve smoothly from **left to right**.
 Ideal for benchmarking **non-stationary Gaussian process models** or **spatial deep learning** architectures.
