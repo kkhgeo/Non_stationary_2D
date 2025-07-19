@@ -1,37 +1,153 @@
-Non-stationary & Anisotropic Spatial Data Generator
-📝 Overview
-This project provides a Python script to generate 2D spatial data that exhibits both non-stationarity and anisotropy. The generated data is based on the Matérn covariance function, allowing for the simulation of complex spatial patterns where statistical properties—such as variance, correlation length, and directionality—change progressively across the field.
+# 🌀 Non-stationary & Anisotropic Spatial Data Generator
 
-This type of synthetic data is invaluable for research in spatial statistics and machine learning. It can be used to develop and validate advanced models like sophisticated Kriging variants or deep learning-based spatial prediction models, which are designed to handle complex real-world phenomena (e.g., terrain elevation, soil contamination, or climate patterns).
+## 📝 Overview
 
-✨ Key Features
-Non-stationarity: Generates data where variance and correlation range change linearly across the spatial domain.
+This project provides a Python script to generate **2D spatial data** that exhibits both **non-stationarity** and **anisotropy**. The generated data is based on the **Matérn covariance function**, allowing simulation of complex spatial patterns where statistical properties—such as variance, correlation length, and directionality—change progressively across the field.
 
-Anisotropy: Simulates direction-dependent spatial correlation. The angle and ratio of this anisotropy can also vary spatially.
+Such synthetic data is invaluable for research in **spatial statistics** and **machine learning**. It can be used to develop and validate advanced models like:
 
-Matérn Covariance: Utilizes the flexible Matérn covariance model to control the smoothness of the generated field.
+* Sophisticated **Kriging variants**
+* Deep learning-based spatial prediction models
+  (e.g., terrain elevation, soil contamination, or climate patterns)
 
-GeoTIFF Export: Saves the generated 2D grid data as a .tif file, which is readily usable in GIS software.
+---
 
-Easy Customization: Allows for easy generation of data with different characteristics by modifying the params dictionary within the script.
+## ✨ Key Features
 
-📊 Generated Data Example
-Below is a visualization of a generated field with the following parameters: variance_range=(0.5, 3.0), range_param_range=(0.05, 0.5), angle_range_deg=(-30, 60), and ratio_range=(1.5, 3.0). You can observe how the texture, scale, and orientation of the patterns gradually evolve from left to right.
+* **Non-stationarity**:
+  Generates data where **variance** and **correlation range** change **linearly** across the spatial domain.
 
-⚙️ Code Explanation
-matern_covariance(...): A function that computes the Matérn covariance value for a given distance.
+* **Anisotropy**:
+  Simulates **direction-dependent spatial correlation**. The **angle** and **ratio** of anisotropy can also vary spatially.
 
-generate_anisotropic_nonstationary_data(...): The core function containing the main logic.
+* **Matérn Covariance**:
+  Utilizes the flexible **Matérn covariance model** to control the smoothness of the generated field.
 
-It generates a grid of spatial coordinates.
+* **GeoTIFF Export**:
+  Saves the generated 2D grid data as a **`.tif` file**, readily usable in GIS software.
 
-It defines "parameter fields" for variance, range, angle, and ratio that vary linearly with the x-coordinate.
+* **Easy Customization**:
+  Modify the `params` dictionary in the script to easily generate data with different characteristics.
 
-When calculating the covariance between any two points (i, j), it uses the "local" average parameters of these points to compute an anisotropic distance, which is then fed into the Matérn function.
+---
 
-It produces the final random field via Cholesky decomposition of the full covariance matrix.
+## 📊 Generated Data Example
 
-main(): Sets the simulation parameters and calls the functions for data generation, GeoTIFF saving, and visualization in sequence.
+The following parameter set was used to produce a spatial field with gradually changing spatial properties:
 
-⚖️ License
-This project is licensed under the MIT License.
+```python
+params = {
+    "variance_range": (0.5, 3.0),
+    "range_param_range": (0.05, 0.5),
+    "angle_range_deg": (-30, 60),
+    "ratio_range": (1.5, 3.0)
+}
+```
+
+This produces a texture where the **scale**, **smoothness**, and **orientation** of spatial variation evolve smoothly from **left to right**.
+Ideal for benchmarking **non-stationary Gaussian process models** or **spatial deep learning** architectures.
+
+---
+
+## ⚙️ Code Explanation
+
+### 1. `matern_covariance(...)`
+
+Computes the Matérn covariance between two points using the formula:
+
+$$
+C(h) = \sigma^2 \cdot \frac{2^{1-\nu}}{\Gamma(\nu)} \left( \frac{h \sqrt{2\nu}}{\rho} \right)^\nu K_\nu\left( \frac{h \sqrt{2\nu}}{\rho} \right)
+$$
+
+* `h`: distance between points
+* `σ²`: local variance
+* `ρ`: range parameter
+* `ν`: smoothness
+* `K_ν`: modified Bessel function of the second kind
+
+---
+
+### 2. `generate_anisotropic_nonstationary_data(...)`
+
+The core data generation logic:
+
+* Constructs a grid of spatial coordinates.
+* Defines spatially varying fields for:
+
+  * `variance`
+  * `range`
+  * `angle`
+  * `anisotropy ratio`
+* For each pair of points `(i, j)`:
+
+  * Computes an **anisotropic distance** based on average local parameters.
+  * Applies the Matérn covariance function.
+* Assembles the full covariance matrix.
+* Applies **Cholesky decomposition** to sample from the multivariate Gaussian field.
+
+---
+
+### 3. `main()`
+
+Orchestrates the entire workflow:
+
+* Sets simulation parameters
+* Calls data generation routine
+* Exports result as:
+
+  * **GeoTIFF** for GIS
+  * **Matplotlib visualization**
+
+---
+
+## 📂 Output Example
+
+* **File**: `output/matern_field.tif`
+* **Size**: 100 × 100 pixels (default)
+* **Format**: GeoTIFF
+* **Visualization**: Matplotlib heatmap with color gradient
+
+---
+
+## 🔧 Customization Tips
+
+Change spatial characteristics by modifying these parameters in `main()`:
+
+| Parameter           | Meaning                              | Recommended Range |
+| ------------------- | ------------------------------------ | ----------------- |
+| `variance_range`    | Local variance                       | `(0.1, 3.0)`      |
+| `range_param_range` | Spatial correlation length           | `(0.01, 1.0)`     |
+| `angle_range_deg`   | Direction of anisotropy (in degrees) | `(-90, 90)`       |
+| `ratio_range`       | Strength of anisotropy               | `(1.0, 5.0)`      |
+| `smoothness`        | Smoothness of the Matérn function    | `1.0 ~ 2.5`       |
+
+---
+
+## 📦 Dependencies
+
+* `numpy`
+* `scipy`
+* `matplotlib`
+* `rasterio`
+
+Install with:
+
+```bash
+pip install numpy scipy matplotlib rasterio
+```
+
+---
+
+## ⚖️ License
+
+This project is licensed under the **MIT License**.
+See [`LICENSE`](LICENSE) for more details.
+
+---
+
+## 📬 Contact
+
+For questions or contributions, feel free to open an [Issue](https://github.com/your-repo/issues) or pull request.
+
+---
+
