@@ -47,7 +47,7 @@ params = {
 }
 ```
 <p align="center">
-  <img src="Non_stationary_example.png" alt="Generated Non-stationary Anisotropic Field" width="70%">
+  <img src="Non_stationary_example.png" alt="Generated Non-stationary Anisotropic Field" width="50%">
 </p>
 
 This produces a texture where the **scale**, **smoothness**, and **orientation** of spatial variation evolve smoothly from **left to right**.
