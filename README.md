@@ -1,4 +1,3 @@
----
 # 🌀 Non-stationary & Anisotropic Spatial Data Generator
 
 ## 📝 Overview
